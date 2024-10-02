@@ -1,8 +1,5 @@
-
-@inline function _rho(E,m) 
-    #
-    # FIXME: implement this!
-    #
+@inline function _rho(E,m)
+    sqrt(E^2 - m^2)
 end
 
 """
@@ -47,9 +44,11 @@ julia> differential_cross_section(E_in, cos_theta)
 - Schwartz 2014: M.D. Schwartz, "Quantum Field Theory and the Standard Model", Cambridge University Press, New York (2014)
 """
 function differential_cross_section(E_in, cos_theta)
-    #
-    # FIXME: fill me in
-    #
+    rho_e = _rho(E_in, ELECTRON_MASS)
+    rho_mu = _rho(E_in, MUON_MASS)
+
+    dcs = rho_mu/rho_e * ((ALPHA^2)/(16E_in^6)) * (E_in^4 + (rho_e^2)*(rho_mu^2)*(cos_theta^2) + (E_in^2)*((ELECTRON_MASS^2) + (MUON_MASS^2)))
+    return convert(typeof(E_in), dcs)
 end
 
 """
@@ -85,10 +84,9 @@ julia> total_cross_section(E_in)
 ```
 """
 function total_cross_section(E_in)
-    #
-    # FIXME: fill me in
-    #
+    ρ_e = _rho(E_in, ELECTRON_MASS)
+    ρ_μ = _rho(E_in, MUON_MASS)
+    
+    tcs = ((π*ALPHA^2)/(8*E_in^6)) * ((ρ_μ/ρ_e) * (2E_in^4 + (2/3)*(ρ_μ^2)*(ρ_e^2) + (2E_in^2)*(MUON_MASS^2 + ELECTRON_MASS^2)))
+    return convert(typeof(E_in), tcs)
 end
-
-
-

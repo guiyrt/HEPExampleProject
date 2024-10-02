@@ -1,5 +1,3 @@
-# FIXME: implement the constants
-
 """
     ELECTRON_MASS
 
@@ -12,7 +10,7 @@ This value is taken from the PDG 2020 recommended values of the fundamental phys
 - The Review of Particle Physics: P.A. Zyla et al. (Particle Data Group), Prog. Theor. Exp. Phys. 2020, 083C01 (2020)
 
 """
-ELECTRON_MASS
+const ELECTRON_MASS = 0.51099895000
 
 """
    MUON_MASS 
@@ -25,7 +23,7 @@ This value is taken from the PDG 2020 recommended values of the fundamental phys
 - The Review of Particle Physics: P.A. Zyla et al. (Particle Data Group), Prog. Theor. Exp. Phys. 2020, 083C01 (2020)
 
 """
-MUON_MASS
+const MUON_MASS = 105.6583755
 
 """
   ALPHA 
@@ -38,4 +36,4 @@ This value is taken from the PDG 2020 recommended values of the fundamental phys
 - The Review of Particle Physics: P.A. Zyla et al. (Particle Data Group), Prog. Theor. Exp. Phys. 2020, 083C01 (2020)
 
 """
-ALPHA
+const ALPHA = 0.0072973525643(11)

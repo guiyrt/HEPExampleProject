@@ -22,18 +22,17 @@ FourMomentum(en = 4.0, x = 1.0, y = 2.0, z = 3.0)
 ```
 """
 struct FourMomentum{T<:Real}
-    #
-    # FIXME: fill me in
-    #
+    en::T
+    x::T
+    y::T
+    z::T
 end
 # type promotion on construction
 FourMomentum(en,x,y,z) = FourMomentum(promote(en,x,y,z)...)
 
 # return the element type
 function Base.eltype(::FourMomentum{T}) where T 
-    #
-    # FIXME:
-    #
+    return T
 end
 
 # Overload Base.show for pretty printing of FourMomentum; plain text version
@@ -71,9 +70,12 @@ FourMomentum(en = 6.0, x = 1.5, y = 3.0, z = 4.5)
 ```
 """
 function Base.:+(p1::FourMomentum, p2::FourMomentum) 
-
-    # FIXME: fill me in
-
+    FourMomentum(
+        p1.en + p2.en,
+        p1.x + p2.x,
+        p1.y + p2.y,
+        p1.z + p2.z
+    )
 end
 
 
@@ -98,7 +100,12 @@ FourMomentum(en = 2.0, x = 0.5, y = 1.0, z = 1.5)
 ```
 """ 
 function Base.:-(p1::FourMomentum, p2::FourMomentum) 
-    # FIXME: fill me in
+    FourMomentum(
+        p1.en - p2.en,
+        p1.x - p2.x,
+        p1.y - p2.y,
+        p1.z - p2.z
+    )
 end
 
 
@@ -120,7 +127,12 @@ FourMomentum(en = 8.0, x = 2.0, y = 4.0, z = 6.0)
 ```
 """
 function Base.:*(a::Real, p::FourMomentum) 
-    # FIXME: fill me in
+    FourMomentum(
+        p.en * a,
+        p.x * a,
+        p.y * a,
+        p.z * a
+    )
 end
 
 
@@ -132,7 +144,7 @@ Computes the Minkowski dot product of two four-momentum vectors. The dot product
 Minkowski metric `(+,-,-,-)`. For ``p_i = (E_i,p_i^x,p_i^y,p_i^z)`` with ``i=1,2``, the result is:
 
 ```math
-    p_1 \\cdot p_2 = E_1E_2 - p_1^xp_2^x - p_1^yp_2^y + p_1^zp_2^z
+    p_1 \\cdot p_2 = E_1E_2 - p_1^xp_2^x - p_1^yp_2^y - p_1^zp_2^z
 ```
 
 # Example
@@ -148,14 +160,18 @@ julia> minkowski_dot(p1, p2)
 ```
 """
 function minkowski_dot(p1::FourMomentum, p2::FourMomentum)
-    # Minkowski metric: (+,-,-,-)
-    # FIXME: fill me in
+    p1.en*p2.en - p1.x*p2.x - p1.y*p2.y - p1.z*p2.z
 end
 
 function _construct_moms_from_coords(E_in, cos_theta, phi)
-    #
-    # FIXME: fill me in
-    #
+    ρ_μ = _rho(E_in, MUON_MASS)
+    sin_theta = sqrt(1 - cos_theta^2)
+
+    x = sin_theta * cos(phi)
+    y = sin_theta * sin(phi)
+    z = cos_theta
+
+    [x*ρ_μ, y*ρ_μ, z*ρ_μ]
 end
 
 # TODO: 
@@ -196,8 +212,14 @@ julia> mom_dict["mu+"]
 FourMomentum(en = 1000.0, x = -306.4954310103767, y = -306.49543101037665, z = -894.9622389946002)
 ```
 """
-function coords_to_dict(E_in,cos_theta,phi)
-    #
-    # FIXME: fill me in
-    #
+function coords_to_dict(E_in, cos_theta, phi)
+    ρ_e = _rho(E_in, ELECTRON_MASS)
+    mu_moms = _construct_moms_from_coords(E_in, cos_theta, phi)
+
+    Dict(
+        "e-" => FourMomentum(E_in, 0, 0, ρ_e),
+        "e+" => FourMomentum(E_in, 0, 0, -ρ_e),
+        "mu-" => FourMomentum(E_in, mu_moms...),
+        "mu+" => FourMomentum(E_in, -mu_moms...)
+    )
 end
